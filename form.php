@@ -11,41 +11,17 @@
 
 <?php
 
-class From extends Get_Request {
+require_once "get_request.php";
 
+class Form extends Get_Request
+{
 
-
-    
 }
-
-
-
 
 $form = new Form;
 $plans = $form->get_all_finances();
-$option = '';
 
-//var_dump($plans);die;
-
-foreach($plans as $finance ){
-    //Concatenate each fiannce_id and finance_text to $option
-    $option .= '<option value="'.$finance->id.'">'.$finance->description.'</option>';
-
-         }    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+?>
 
 
            <form action="application_request.php" method="post">
@@ -67,7 +43,7 @@ foreach($plans as $finance ){
                                         <input type="text" class="form-control" id="number" name="name" placeholder="First Name" required>
                                     </div>
                                 </div>
-                            
+
                                  <div class="form-group">
                                     <div class="input-group mb-2">
                                         <div class="input-group-prepend">
@@ -137,15 +113,15 @@ foreach($plans as $finance ){
                                             <div class="input-group-text"><i class="fa fa-user text-info"></i></div>
                                         </div>
                                         <select type="text" class="form-control" id="number" name="finance" size="1" required placeholder="Pick Finance">
-                                           
+
                                             <option value="" disabled selected>Select your finance option</option>
                                             <?php
-                                            echo $option;                                        
-                                         ?>
-                                        </select>    
+echo $plans;
+?>
+                                        </select>
                                     </div>
                                 </div>
-                                
+
 
                                 <div class="text-center">
                                     <input type="submit" value="Submit" class="btn btn-info btn-block rounded-0 py-2">
