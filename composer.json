@@ -1,0 +1,7 @@
+{
+    "require": {
+        "rmccue/requests": "^1.7",
+        "divido/merchant-sdk":"2.0.0",
+        "divido/merchant-sdk-guzzle-6": "dev-master"
+    }
+}
