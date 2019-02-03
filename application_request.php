@@ -1,52 +1,12 @@
-
-
 <?php
 
 include_once '/vendor/autoload.php';
+require_once "helper.php";
 define('API_KEY', 'sandbox_cafc150c1.68f7553baca9079c07a7033850d9be1b');
-function environment()
+
+class Application_Request extends Helper
 {
-    if (strpos(constant('API_KEY'), 'sandbox') !== false) {
-        return '.sandbox';
-    } else if (strpos(constant('API_KEY'), 'live') !== false) {
-        return null;
-    } else {
-        die('Please add your API key');
-    }
-}
 
-function environments($key)
-{
-    $array = explode('_', $key);
-    $environment = strtoupper($array[0]);
-    switch ($environment) {
-        case 'LIVE':
-            return constant('Divido\MerchantSDK\Environment::' . $environment);
-            break;
-
-        case 'SANDBOX':
-            return constant("Divido\MerchantSDK\Environment::$environment");
-            break;
-
-        default:
-            return constant("Divido\MerchantSDK\Environment::SANDBOX");
-            break;
-    }
-}
-
-$env = environment();
-$url = 'https://secure' . $env . '.divido.com/v1/creditrequest';
-
-//Server Side verification for $_POST
-function check_key($key)
-{
-    return (isset($_POST[$key]) && !empty(trim($_POST[$key])) ? $_POST[$key] : false);
-}
-
-//Loop through the array -> pass the key into the check_key() function to verify each post
-$array = array('email', 'name', 'surname', 'email', 'address', 'phone', 'price', 'deposit', 'product', 'finance');
-foreach ($array as $key) {
-    $checked_array[$key] = check_key($key);
 }
 
 //You can specify the redirect, checkout and respose URL here
@@ -54,11 +14,21 @@ $redirectUrl = 'URL OF YOUR CHOICE';
 $checkoutUrl = 'URL OF YOUR CHOICE';
 $responseUrl = 'URL OF YOUR CHOICE';
 
+//Start of application request
+$request = new Application_Request;
+$env = $request->check_environment();
+$url = 'https://secure' . $env . '.divido.com/v1/creditrequest';
+$env = $request->environments(constant('API_KEY'));
+
+//Loop through the array -> pass the key into the check_key() function to verify each post
+$array = array('email', 'name', 'surname', 'email', 'address', 'phone', 'price', 'deposit', 'product', 'finance');
+foreach ($array as $key) {
+    $checked_array[$key] = $request->check_key($key);
+}
+
 //Generate URL-encode query string
 
-$env = environments('sandbox_cafc150c1.68f7553baca9079c07a7033850d9be1b');
 $client = new \GuzzleHttp\Client();
-
 $httpClientWrapper = new \Divido\MerchantSDK\HttpClient\HttpClientWrapper(
     new \Divido\MerchantSDKGuzzle6\GuzzleAdapter($client),
     \Divido\MerchantSDK\Environment::CONFIGURATION[$env]['base_uri'],
@@ -115,5 +85,3 @@ if (true) {
 } else {
     echo $decode->error;
 }
-
-?>

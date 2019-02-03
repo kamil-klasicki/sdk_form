@@ -2,8 +2,19 @@
 
 include_once '/vendor/autoload.php';
 
-class Get_Request
+class Helper
 {
+
+    public function check_environment()
+    {
+        if (strpos(constant('API_KEY'), 'sandbox') !== false) {
+            return '.sandbox';
+        } else if (strpos(constant('API_KEY'), 'live') !== false) {
+            return null;
+        } else {
+            die('Please add your API key');
+        }
+    }
 
     public function environments($key)
     {
@@ -47,4 +58,11 @@ class Get_Request
         }
         return $option;
     }
+
+
+    public function check_key($key)
+    {
+        return (isset($_POST[$key]) && !empty(trim($_POST[$key])) ? $_POST[$key] : false);
+    }
+
 };
